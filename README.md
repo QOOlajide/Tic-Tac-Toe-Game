@@ -52,3 +52,10 @@ Here’s the workflow I followed to keep learning fast while maintaining underst
 1. **Clone this repository**  
    ```bash
    git clone https://github.com/yourusername/tic-tac-toe-vibecoding.git
+2. **Navigate to Project Folder**  
+   ```bash
+   cd tic-tac-toe-vibecoding
+3. **Open This Project In Your Browser and Run with Live Server**  
+   Locate the tictactoe.html file inside the project folder
+4. **Deployment Coming Soon!**  
+   
