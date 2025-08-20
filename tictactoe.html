@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 0;
+            margin: 40px auto;
+            width: 240px;
+            height: 240px;
+            border: 2px solid #333;
+            background: #fff;
+        }
+        .cell {
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            background: #f9f9f9;
+            transition: background 0.2s;
+        }
+        .cell:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="game-board">
+        <div class="cell" id="cell-0"></div>
+        <div class="cell" id="cell-1"></div>
+        <div class="cell" id="cell-2"></div>
+        <div class="cell" id="cell-3"></div>
+        <div class="cell" id="cell-4"></div>
+        <div class="cell" id="cell-5"></div>
+        <div class="cell" id="cell-6"></div>
+        <div class="cell" id="cell-7"></div>
+        <div class="cell" id="cell-8"></div>
+    </div>
+    <p id="status">Player X's turn</p>
+    
+    <script>
+        // Game state variables
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+        
+        // Winning combinations
+        const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+        
+        // Get DOM elements
+        const cells = document.querySelectorAll('.cell');
+        const statusDisplay = document.getElementById('status');
+        
+        // Add click event listeners to all cells
+        cells.forEach((cell, index) => {
+            cell.addEventListener('click', () => handleCellClick(index));
+        });
+        
+        // Handle cell click
+        function handleCellClick(index) {
+            // Check if cell is empty and game is active
+            if (gameBoard[index] === '' && gameActive) {
+                // Make the move
+                gameBoard[index] = currentPlayer;
+                cells[index].textContent = currentPlayer;
+                cells[index].style.color = currentPlayer === 'X' ? '#e74c3c' : '#3498db';
+                
+                // Check for win
+                if (checkWin()) {
+                    statusDisplay.textContent = `Player ${currentPlayer} wins!`;
+                    gameActive = false;
+                    highlightWinningCells();
+                    return;
+                }
+                
+                // Check for draw
+                if (checkDraw()) {
+                    statusDisplay.textContent = "It's a draw!";
+                    gameActive = false;
+                    return;
+                }
+                
+                // Switch player
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+            }
+        }
+        
+        // Check for win
+        function checkWin() {
+            return winningCombinations.some(combination => {
+                return combination.every(index => {
+                    return gameBoard[index] === currentPlayer;
+                });
+            });
+        }
+        
+        // Check for draw
+        function checkDraw() {
+            return gameBoard.every(cell => cell !== '');
+        }
+        
+        // Highlight winning cells
+        function highlightWinningCells() {
+            winningCombinations.forEach(combination => {
+                if (combination.every(index => gameBoard[index] === currentPlayer)) {
+                    combination.forEach(index => {
+                        cells[index].style.backgroundColor = '#2ecc71';
+                        cells[index].style.color = 'white';
+                    });
+                }
+            });
+        }
+        
+        // Reset game function
+        function resetGame() {
+            currentPlayer = 'X';
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            
+            // Clear all cells
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.style.backgroundColor = '#f9f9f9';
+                cell.style.color = 'black';
+            });
+            
+            statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+        }
+        
+        // Add keyboard shortcut for reset (R key)
+        document.addEventListener('keydown', (event) => {
+            if (event.key.toLowerCase() === 'r') {
+                resetGame();
+            }
+        });
+        
+        // Add reset button
+        const resetButton = document.createElement('button');
+        resetButton.textContent = 'Reset Game';
+        resetButton.style.cssText = `
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        `;
+        resetButton.addEventListener('mouseenter', () => {
+            resetButton.style.backgroundColor = '#2980b9';
+        });
+        resetButton.addEventListener('mouseleave', () => {
+            resetButton.style.backgroundColor = '#3498db';
+        });
+        resetButton.addEventListener('click', resetGame);
+        
+        // Insert reset button after the status
+        statusDisplay.parentNode.insertBefore(resetButton, statusDisplay.nextSibling);
+        
+        // Add instructions
+        const instructions = document.createElement('p');
+        instructions.textContent = 'Press R to reset the game';
+        instructions.style.cssText = `
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        `;
+        statusDisplay.parentNode.insertBefore(instructions, resetButton.nextSibling);
+    </script>
+</body>
+</html>
+
+
+
