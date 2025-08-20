@@ -1,0 +1,9 @@
+// vercel.json (your current config)
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/tictactoe.html"  // This tells Vercel to serve tictactoe.html as homepage
+    }
+  ]
+}
